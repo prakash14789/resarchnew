@@ -10,21 +10,25 @@ export function CursorFX() {
   const mouseY = useMotionValue(0);
 
   // Spring physics for the outer ring (lagging effect)
-  const springConfig = { damping: 25, stiffness: 200 };
+  const springConfig = { damping: 25, stiffness: 250 };
   const cursorX = useSpring(mouseX, springConfig);
   const cursorY = useSpring(mouseY, springConfig);
+
+  // Ghost trailing dot (extra lag)
+  const ghostX = useSpring(mouseX, { damping: 40, stiffness: 150 });
+  const ghostY = useSpring(mouseY, { damping: 40, stiffness: 150 });
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
 
-      // Check if hovering over interactive elements
       const target = e.target as HTMLElement;
       const isInteractive = 
         target.closest('button') || 
         target.closest('a') || 
         target.closest('[role="button"]') ||
+        target.closest('.mapboxgl-ctrl-group') ||
         target.style.cursor === 'pointer';
       
       setIsHovering(!!isInteractive);
@@ -46,7 +50,26 @@ export function CursorFX() {
 
   return (
     <>
-      {/* Outer Ring */}
+      {/* Ghost Trailing Dot */}
+      <motion.div
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          x: ghostX,
+          y: ghostY,
+          translateX: '-50%',
+          translateY: '-50%',
+          width: 4,
+          height: 4,
+          borderRadius: '50%',
+          backgroundColor: 'rgba(99, 102, 241, 0.3)',
+          pointerEvents: 'none',
+          zIndex: 9998,
+        }}
+      />
+
+      {/* Outer Ring with Backdrop Blur */}
       <motion.div
         style={{
           position: 'fixed',
@@ -56,37 +79,43 @@ export function CursorFX() {
           y: cursorY,
           translateX: '-50%',
           translateY: '-50%',
-          width: isHovering ? 60 : 32,
-          height: isHovering ? 60 : 32,
+          width: isHovering ? 64 : 36,
+          height: isHovering ? 64 : 36,
           borderRadius: '50%',
-          border: '1.5px solid rgba(99, 102, 241, 0.4)',
+          border: '1px solid rgba(129, 140, 248, 0.4)',
           pointerEvents: 'none',
           zIndex: 9999,
-          mixBlendMode: 'difference',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
+          backdropFilter: isHovering ? 'blur(2px)' : 'none',
         }}
         animate={{
-          scale: isClicking ? 0.8 : 1,
-          borderColor: isHovering ? 'rgba(99, 102, 241, 0.8)' : 'rgba(99, 102, 241, 0.4)',
-          backgroundColor: isHovering ? 'rgba(99, 102, 241, 0.05)' : 'transparent',
+          scale: isClicking ? 0.9 : 1,
+          borderColor: isHovering ? 'rgba(129, 140, 248, 0.9)' : 'rgba(129, 140, 248, 0.4)',
+          backgroundColor: isHovering ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
         }}
         transition={{ type: 'spring', damping: 20, stiffness: 300 }}
       >
-        {/* Subtle inner glow for outer ring when hovering */}
-        {isHovering && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            style={{
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              boxShadow: 'inset 0 0 15px rgba(99, 102, 241, 0.2)',
-            }}
-          />
-        )}
+        {/* Glow effect for outer ring */}
+        <motion.div
+          animate={{
+            rotate: 360,
+          }}
+          transition={{
+            duration: 8,
+            repeat: Infinity,
+            ease: "linear"
+          }}
+          style={{
+            position: 'absolute',
+            width: '110%',
+            height: '110%',
+            borderRadius: '50%',
+            border: '1px dashed rgba(129, 140, 248, 0.2)',
+            opacity: isHovering ? 1 : 0,
+          }}
+        />
       </motion.div>
 
       {/* Inner Dot */}
@@ -99,28 +128,30 @@ export function CursorFX() {
           y: mouseY,
           translateX: '-50%',
           translateY: '-50%',
-          width: 6,
-          height: 6,
+          width: 8,
+          height: 8,
           borderRadius: '50%',
-          backgroundColor: '#818cf8',
+          backgroundColor: isHovering ? '#fff' : '#818cf8',
           pointerEvents: 'none',
           zIndex: 10000,
-          boxShadow: '0 0 10px rgba(129, 140, 248, 0.6)',
+          boxShadow: isHovering 
+            ? '0 0 15px rgba(255, 255, 255, 0.8)' 
+            : '0 0 10px rgba(129, 140, 248, 0.6)',
         }}
         animate={{
-          scale: isClicking ? 1.5 : isHovering ? 0.5 : 1,
+          scale: isClicking ? 1.4 : isHovering ? 0.6 : 1,
         }}
       >
-        {/* Pulse effect for the dot */}
+        {/* Rapid Pulse effect for the dot */}
         <motion.div
           animate={{
-            scale: [1, 1.8, 1],
-            opacity: [0.5, 0, 0.5],
+            scale: [1, 2.2, 1],
+            opacity: [0.6, 0, 0.6],
           }}
           transition={{
-            duration: 2,
+            duration: 1.5,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: "easeOut"
           }}
           style={{
             position: 'absolute',
@@ -129,7 +160,7 @@ export function CursorFX() {
             right: 0,
             bottom: 0,
             borderRadius: '50%',
-            backgroundColor: '#818cf8',
+            backgroundColor: isHovering ? '#fff' : '#818cf8',
           }}
         />
       </motion.div>
