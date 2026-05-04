@@ -1,0 +1,49 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a0f; overflow: hidden; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@import "tailwindcss";
+
+@theme {
+  --color-page: #0a0a0f;
+  --color-sidebar: #111118;
+  --color-card: #16161f;
+  --color-elevated: #1e1e2e;
+  --color-borderp: #2a2a3e;
+  --color-accent: #6366f1;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  --animate-shimmer: shimmer 2s infinite linear;
+
+  @keyframes shimmer {
+    0% { background-position: -1000px 0; }
+    100% { background-position: 1000px 0; }
+  }
+}
+
+@layer base {
+  html {
+    background-color: var(--color-page);
+    color: white;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    font-family: sans-serif;
+  }
+  
+  a, button, input, select, textarea, [role="button"] {
+    /* cursor: pointer; */
+  }
+}
+
+.shimmer-bg {
+  background: linear-gradient(to right, #16161f 4%, #1e1e2e 25%, #16161f 36%);
+  background-size: 1000px 100%;
+}
