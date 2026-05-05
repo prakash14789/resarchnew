@@ -107,7 +107,7 @@ export default function Prediction() {
       <Header title="Predict Consumption" showFilterBtn={false} />
       <div className="flex-1 p-6 md:p-10 overflow-y-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 max-w-6xl">
-          <div className="bg-card p-8 rounded-3xl border border-borderp shadow-xl">
+          <div className="glass-card p-8 rounded-3xl border border-white/5 shadow-xl">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <div className="flex justify-between mb-2">
@@ -120,24 +120,24 @@ export default function Prediction() {
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <label className="block text-slate-400 font-semibold mb-2">Occupants</label>
-                <input type="number" min="1" max="20" value={form.occupants} onChange={e => setForm({...form, occupants: Number(e.target.value)})} className="w-full bg-elevated border border-borderp rounded-xl p-3 text-white focus:border-accent focus:outline-none cursor-none" />
+                <input type="number" min="1" max="20" value={form.occupants} onChange={e => setForm({...form, occupants: Number(e.target.value)})} className="w-full glass border border-white/10 rounded-xl p-3 text-white focus:border-accent focus:outline-none cursor-none" />
               </div>
               <div>
                 <label className="block text-slate-400 font-semibold mb-2">Appliances</label>
-                <input type="number" min="1" max="30" value={form.appliance_count} onChange={e => setForm({...form, appliance_count: Number(e.target.value)})} className="w-full bg-elevated border border-borderp rounded-xl p-3 text-white focus:border-accent focus:outline-none cursor-none" />
+                <input type="number" min="1" max="30" value={form.appliance_count} onChange={e => setForm({...form, appliance_count: Number(e.target.value)})} className="w-full glass border border-white/10 rounded-xl p-3 text-white focus:border-accent focus:outline-none cursor-none" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <label className="block text-slate-400 font-semibold mb-2">Month</label>
-                <select value={form.month} onChange={e => setForm({...form, month: Number(e.target.value)})} className="w-full bg-elevated border border-borderp rounded-xl p-3 text-white focus:border-accent focus:outline-none cursor-none">
+                <select value={form.month} onChange={e => setForm({...form, month: Number(e.target.value)})} className="w-full glass border border-white/10 rounded-xl p-3 text-white focus:border-accent focus:outline-none cursor-none">
                   {months.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-slate-400 font-semibold mb-2">Model</label>
-                <select value={form.model_name} onChange={e => setForm({...form, model_name: e.target.value})} className="w-full bg-elevated border border-borderp rounded-xl p-3 text-white focus:border-accent focus:outline-none cursor-none">
+                <select value={form.model_name} onChange={e => setForm({...form, model_name: e.target.value})} className="w-full glass border border-white/10 rounded-xl p-3 text-white focus:border-accent focus:outline-none cursor-none">
                   {models.map(m => <option key={m} value={m}>{m}</option>)}
                 </select>
               </div>
@@ -145,7 +145,7 @@ export default function Prediction() {
 
             <div>
               <label className="block text-slate-400 font-semibold mb-2">Category</label>
-              <div className="flex bg-elevated p-1 rounded-xl">
+              <div className="flex glass p-1 rounded-xl border border-white/10">
                 <button type="button" onClick={() => setForm({...form, category: 'residential'})} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-colors ${form.category === 'residential' ? 'bg-success text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}>Residential</button>
                 <button type="button" onClick={() => setForm({...form, category: 'commercial'})} className={`flex-1 py-2 rounded-lg text-sm font-bold transition-colors ${form.category === 'commercial' ? 'bg-accent text-white shadow-lg' : 'text-slate-400 hover:text-slate-200'}`}>Commercial</button>
               </div>
@@ -168,7 +168,7 @@ export default function Prediction() {
                 key="result"
                 initial={{ opacity: 0, y: 20 }} 
                 animate={{ opacity: 1, y: 0 }} 
-                className="bg-card p-8 rounded-3xl border border-borderp shadow-xl relative overflow-hidden"
+                className="glass-card p-8 rounded-3xl border border-white/5 shadow-xl relative overflow-hidden"
               >
                 <h2 className="text-xl font-bold text-white mb-6 text-center">Prediction Result</h2>
                 <GaugeChart value={result.predicted_kwh} level={result.consumption_level} />
@@ -185,12 +185,12 @@ export default function Prediction() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="bg-card p-6 rounded-3xl border border-borderp shadow-xl"
+                className="glass-card p-6 rounded-3xl border border-white/5 shadow-xl"
               >
                 <h3 className="text-slate-400 font-semibold mb-4 uppercase tracking-widest text-xs">Model Comparison</h3>
                 <div className="space-y-3">
                   {comparisons.map(c => (
-                    <div key={c.model} className="flex justify-between items-center p-3 bg-elevated rounded-lg">
+                    <div key={c.model} className="flex justify-between items-center p-3 glass rounded-lg border border-white/5">
                       <span className="text-slate-300 font-medium">{c.model}</span>
                       <span className={`font-bold ${c.model === form.model_name ? 'text-success' : 'text-slate-400'}`}>
                         {Math.round(c.value).toLocaleString()} kWh

@@ -108,33 +108,37 @@ export default function Insights() {
       <Header title="Energy Insights" showFilterBtn={false} />
       <div className="flex-1 p-6 md:p-10 overflow-y-auto">
         <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
-        <motion.div variants={itemVariants} className="bg-card p-6 rounded-2xl border border-borderp shadow-lg">
-          <p className="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-2">Total Consumption</p>
+        <motion.div variants={itemVariants} className="glass-card p-6 rounded-2xl border border-white/5 shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-right from-accent to-transparent opacity-50" />
+          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">Total Consumption</p>
           <p className="text-3xl font-bold text-white"><CountUp end={stats.totalKwh} /> <span className="text-base text-slate-500 font-normal">kWh</span></p>
         </motion.div>
-        <motion.div variants={itemVariants} className="bg-card p-6 rounded-2xl border border-borderp shadow-lg">
-          <p className="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-2">Avg Residential</p>
+        <motion.div variants={itemVariants} className="glass-card p-6 rounded-2xl border border-white/5 shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-right from-success to-transparent opacity-50" />
+          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">Avg Residential</p>
           <p className="text-3xl font-bold text-success"><CountUp end={stats.avgRes} decimals={1} /> <span className="text-base text-slate-500 font-normal">kWh</span></p>
         </motion.div>
-        <motion.div variants={itemVariants} className="bg-card p-6 rounded-2xl border border-borderp shadow-lg">
-          <p className="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-2">Avg Commercial</p>
+        <motion.div variants={itemVariants} className="glass-card p-6 rounded-2xl border border-white/5 shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-right from-accent to-transparent opacity-50" />
+          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">Avg Commercial</p>
           <p className="text-3xl font-bold text-accent"><CountUp end={stats.avgCom} decimals={1} /> <span className="text-base text-slate-500 font-normal">kWh</span></p>
         </motion.div>
-        <motion.div variants={itemVariants} className="bg-card p-6 rounded-2xl border border-borderp shadow-lg">
-          <p className="text-slate-400 text-sm font-semibold uppercase tracking-wider mb-2">High Users</p>
+        <motion.div variants={itemVariants} className="glass-card p-6 rounded-2xl border border-white/5 shadow-lg relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-right from-danger to-transparent opacity-50" />
+          <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">High Users</p>
           <p className="text-3xl font-bold text-danger"><CountUp end={stats.highCount} /> <span className="text-base text-slate-500 font-normal">Zones</span></p>
         </motion.div>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-        <div className="bg-elevated p-6 rounded-2xl border border-borderp h-[400px]">
+        <div className="glass-card p-6 rounded-2xl border border-white/5 h-[400px]">
           <h2 className="text-lg font-semibold mb-4 text-white">Avg Consumption by Area (Top 15)</h2>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={stats.chart1} layout="vertical" margin={{ left: 40, right: 20 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" horizontal={true} vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={true} vertical={false} />
               <XAxis type="number" stroke="#94a3b8" />
               <YAxis dataKey="name" type="category" stroke="#94a3b8" fontSize={12} tick={{ fill: '#94a3b8' }} />
-              <RechartsTooltip cursor={{fill: '#2a2a3e'}} contentStyle={{backgroundColor: '#16161f', borderColor: '#2a2a3e'}} />
+              <RechartsTooltip cursor={{fill: 'rgba(255,255,255,0.05)'}} contentStyle={{backgroundColor: 'rgba(22,22,31,0.9)', borderColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)'}} />
               <Bar dataKey="avg" animationBegin={0} animationDuration={800} radius={[0, 4, 4, 0]}>
                 {stats.chart1.map((entry: any, index: number) => (
                   <Cell key={`cell-${index}`} fill={getLevelColor(entry.level)} />
@@ -144,7 +148,7 @@ export default function Insights() {
           </ResponsiveContainer>
         </div>
 
-        <div className="bg-elevated p-6 rounded-2xl border border-borderp h-[400px] relative">
+        <div className="glass-card p-6 rounded-2xl border border-white/5 h-[400px] relative">
           <h2 className="text-lg font-semibold mb-4 text-white">Commercial vs Residential Share</h2>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
@@ -153,7 +157,7 @@ export default function Insights() {
                   <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
               </Pie>
-              <RechartsTooltip formatter={(val: number) => Math.round(val).toLocaleString() + ' kWh'} contentStyle={{backgroundColor: '#16161f', borderColor: '#2a2a3e'}} />
+              <RechartsTooltip formatter={(val: number) => Math.round(val).toLocaleString() + ' kWh'} contentStyle={{backgroundColor: 'rgba(22,22,31,0.9)', borderColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)'}} />
               <Legend verticalAlign="bottom" height={36} />
             </PieChart>
           </ResponsiveContainer>
@@ -166,14 +170,14 @@ export default function Insights() {
         </div>
       </div>
 
-      <div className="bg-elevated p-6 rounded-2xl border border-borderp h-[400px]">
+      <div className="glass-card p-6 rounded-2xl border border-white/5 h-[400px]">
         <h2 className="text-lg font-semibold mb-4 text-white">Monthly Consumption Trend</h2>
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={stats.chart3} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
             <XAxis dataKey="month" stroke="#94a3b8" />
             <YAxis stroke="#94a3b8" />
-            <RechartsTooltip contentStyle={{backgroundColor: '#16161f', borderColor: '#2a2a3e'}} />
+            <RechartsTooltip contentStyle={{backgroundColor: 'rgba(22,22,31,0.9)', borderColor: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(8px)'}} />
             <Legend />
             <Line type="monotone" dataKey="residential" name="Residential (kWh)" stroke="#10b981" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 8 }} animationDuration={800} />
             <Line type="monotone" dataKey="commercial" name="Commercial (kWh)" stroke="#6366f1" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 8 }} animationDuration={800} />

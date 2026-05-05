@@ -68,19 +68,25 @@ export default function MapView() {
       />
 
       {/* Header overlaid top-left */}
-      <div style={{
+      <div className="glass" style={{
         position: 'absolute', top: 16, left: 16, zIndex: 10,
-        background: 'rgba(17,17,24,0.85)',
-        backdropFilter: 'blur(8px)',
-        border: '1px solid #2a2a3e',
-        borderRadius: 12, padding: '10px 16px',
-        display: 'flex', alignItems: 'center', gap: 12
+        borderRadius: 14, padding: '12px 20px',
+        display: 'flex', alignItems: 'center', gap: 16,
+        border: '1px solid rgba(255,255,255,0.1)',
+        boxShadow: '0 8px 32px rgba(0,0,0,0.3)'
       }}>
-        <h1 style={{ fontSize: 14, fontWeight: 600, color: '#fff' }}>3D Energy Map</h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 8, height: 8, borderRadius: '50%', background: '#6366f1', boxShadow: '0 0 10px #6366f1' }} />
+          <h1 style={{ fontSize: 14, fontWeight: 700, color: '#fff', letterSpacing: '0.02em' }}>3D SPATIAL ENGINE</h1>
+        </div>
+        <div style={{ width: 1, height: 16, background: 'rgba(255,255,255,0.1)' }} />
         <button onClick={() => setIsFilterOpen(f => !f)}
-          style={{ fontSize: 12, padding: '4px 10px', borderRadius: 6,
-            background: '#6366f1', border: 'none', color: '#fff', cursor: 'pointer' }}>
-          Filters
+          style={{ fontSize: 12, fontWeight: 600, padding: '6px 14px', borderRadius: 8,
+            background: 'linear-gradient(135deg, #6366f1, #4f46e5)', border: 'none', color: '#fff', 
+            cursor: 'none', boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
+            transition: 'transform 0.2s'
+          }}>
+          Map Filters
         </button>
       </div>
 

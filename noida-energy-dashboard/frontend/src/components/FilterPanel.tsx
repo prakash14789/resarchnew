@@ -23,7 +23,7 @@ export const FilterPanel = ({ filters, setFilters, onClose }: any) => {
         animate={{ y: 0 }}
         exit={{ y: '-100%' }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="absolute top-0 left-0 right-0 bg-elevated/95 border-b border-borderp p-6 shadow-2xl pointer-events-auto"
+        className="absolute top-0 left-0 right-0 glass border-b border-white/10 p-6 shadow-2xl pointer-events-auto rounded-b-2xl"
       >
         <div className="max-w-3xl mx-auto">
           <div className="flex justify-between items-center mb-6">

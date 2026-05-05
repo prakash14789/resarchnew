@@ -11,7 +11,7 @@ export const DetailPanel = ({ feature, onClose }: any) => {
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-          className="absolute top-0 right-0 h-full w-80 bg-gray-900/95 backdrop-blur-xl border-l border-gray-800 p-6 shadow-2xl z-40"
+          className="absolute top-4 right-4 h-[calc(100%-32px)] w-80 glass border border-white/10 p-6 shadow-2xl z-40 rounded-2xl"
         >
           <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-white bg-gray-800 p-1 rounded-full transition-colors">
             <X className="w-5 h-5" />
