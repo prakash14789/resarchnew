@@ -114,30 +114,30 @@ export default function Prediction() {
                 <label className="text-slate-400 font-semibold">Area (sq ft)</label>
                 <span className="text-success font-bold">{form.area_sqft}</span>
               </div>
-              <input type="range" min="100" max="5000" step="50" value={form.area_sqft} onChange={e => setForm({...form, area_sqft: Number(e.target.value)})} className="w-full accent-accent cursor-none" />
+              <input type="range" min="100" max="5000" step="50" value={form.area_sqft} onChange={e => setForm({...form, area_sqft: Number(e.target.value)})} className="w-full accent-accent" />
             </div>
 
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <label className="block text-slate-400 font-semibold mb-2">Occupants</label>
-                <input type="number" min="1" max="20" value={form.occupants} onChange={e => setForm({...form, occupants: Number(e.target.value)})} className="w-full glass border border-white/10 rounded-xl p-3 text-white focus:border-accent focus:outline-none cursor-none" />
+                <input type="number" min="1" max="20" value={form.occupants} onChange={e => setForm({...form, occupants: Number(e.target.value)})} className="w-full glass border border-white/10 rounded-xl p-3 text-white focus:border-accent focus:outline-none" />
               </div>
               <div>
                 <label className="block text-slate-400 font-semibold mb-2">Appliances</label>
-                <input type="number" min="1" max="30" value={form.appliance_count} onChange={e => setForm({...form, appliance_count: Number(e.target.value)})} className="w-full glass border border-white/10 rounded-xl p-3 text-white focus:border-accent focus:outline-none cursor-none" />
+                <input type="number" min="1" max="30" value={form.appliance_count} onChange={e => setForm({...form, appliance_count: Number(e.target.value)})} className="w-full glass border border-white/10 rounded-xl p-3 text-white focus:border-accent focus:outline-none" />
               </div>
             </div>
 
             <div className="grid grid-cols-2 gap-6">
               <div>
                 <label className="block text-slate-400 font-semibold mb-2">Month</label>
-                <select value={form.month} onChange={e => setForm({...form, month: Number(e.target.value)})} className="w-full glass border border-white/10 rounded-xl p-3 text-white focus:border-accent focus:outline-none cursor-none">
+                <select value={form.month} onChange={e => setForm({...form, month: Number(e.target.value)})} className="w-full glass border border-white/10 rounded-xl p-3 text-white focus:border-accent focus:outline-none">
                   {months.map((m, i) => <option key={m} value={i + 1}>{m}</option>)}
                 </select>
               </div>
               <div>
                 <label className="block text-slate-400 font-semibold mb-2">Model</label>
-                <select value={form.model_name} onChange={e => setForm({...form, model_name: e.target.value})} className="w-full glass border border-white/10 rounded-xl p-3 text-white focus:border-accent focus:outline-none cursor-none">
+                <select value={form.model_name} onChange={e => setForm({...form, model_name: e.target.value})} className="w-full glass border border-white/10 rounded-xl p-3 text-white focus:border-accent focus:outline-none">
                   {models.map(m => <option key={m} value={m}>{m}</option>)}
                 </select>
               </div>
@@ -154,7 +154,7 @@ export default function Prediction() {
             <button 
               type="submit" 
               disabled={loading} 
-              className="w-full bg-success hover:brightness-110 hover:scale-[1.02] active:scale-95 text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-[0_0_20px_rgba(16,185,129,0.3)] flex items-center justify-center gap-2 cursor-none"
+              className="w-full bg-success hover:brightness-110 hover:scale-[1.02] active:scale-95 text-white font-bold py-4 rounded-xl transition-all duration-200 shadow-[0_0_20px_rgba(16,185,129,0.3)] flex items-center justify-center gap-2"
             >
               {loading ? <><Loader2 className="animate-spin w-5 h-5" /> Predicting...</> : 'Predict Consumption'}
             </button>

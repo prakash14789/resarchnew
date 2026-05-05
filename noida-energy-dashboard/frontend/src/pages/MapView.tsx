@@ -83,7 +83,7 @@ export default function MapView() {
         <button onClick={() => setIsFilterOpen(f => !f)}
           style={{ fontSize: 12, fontWeight: 600, padding: '6px 14px', borderRadius: 8,
             background: 'linear-gradient(135deg, #6366f1, #4f46e5)', border: 'none', color: '#fff', 
-            cursor: 'none', boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
+            boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)',
             transition: 'transform 0.2s'
           }}>
           Map Filters

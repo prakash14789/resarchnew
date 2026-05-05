@@ -4,6 +4,7 @@ import MapView from './pages/MapView';
 import Insights from './pages/Insights';
 import ModelComparison from './pages/ModelComparison';
 import Prediction from './pages/Prediction';
+import { CursorFX } from './components/CursorFX';
 
 export default function App() {
   return (
@@ -17,6 +18,7 @@ export default function App() {
         fontFamily: 'Inter, system-ui, sans-serif',
         overflow: 'hidden'
       }}>
+        <CursorFX />
         <Sidebar />
         <main style={{ flex: 1, overflow: 'auto', position: 'relative' }}>
           <Routes>
