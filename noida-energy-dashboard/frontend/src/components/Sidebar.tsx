@@ -33,7 +33,10 @@ export default function Sidebar() {
 
       <nav style={{ flex: 1, padding: '16px 12px', display: 'flex', flexDirection: 'column', gap: 6 }}>
         {nav.map(({ to, icon: Icon, label }) => (
-          <NavLink key={to} to={to} end={to === '/'}
+          <NavLink 
+            key={to} 
+            to={to} 
+            end={to === '/'}
             style={({ isActive }) => ({
               display: 'flex', alignItems: 'center', gap: 12,
               padding: '10px 14px', borderRadius: 10, textDecoration: 'none',
@@ -42,9 +45,14 @@ export default function Sidebar() {
               color: isActive ? '#fff' : '#64748b',
               border: isActive ? '1px solid rgba(99, 102, 241, 0.3)' : '1px solid transparent',
               boxShadow: isActive ? '0 4px 12px rgba(0,0,0,0.1)' : 'none'
-            })}>
-            <Icon size={16} strokeWidth={isActive ? 2.5 : 2} color={isActive ? '#818cf8' : 'currentColor'} />
-            {label}
+            })}
+          >
+            {({ isActive }) => (
+              <>
+                <Icon size={16} strokeWidth={isActive ? 2.5 : 2} color={isActive ? '#818cf8' : 'currentColor'} />
+                {label}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>

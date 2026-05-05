@@ -109,22 +109,22 @@ export default function Insights() {
       <div className="flex-1 p-6 md:p-10 overflow-y-auto">
         <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
         <motion.div variants={itemVariants} className="glass-card p-6 rounded-2xl border border-white/5 shadow-lg relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-right from-accent to-transparent opacity-50" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-transparent opacity-50" />
           <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">Total Consumption</p>
           <p className="text-3xl font-bold text-white"><CountUp end={stats.totalKwh} /> <span className="text-base text-slate-500 font-normal">kWh</span></p>
         </motion.div>
         <motion.div variants={itemVariants} className="glass-card p-6 rounded-2xl border border-white/5 shadow-lg relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-right from-success to-transparent opacity-50" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-success to-transparent opacity-50" />
           <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">Avg Residential</p>
           <p className="text-3xl font-bold text-success"><CountUp end={stats.avgRes} decimals={1} /> <span className="text-base text-slate-500 font-normal">kWh</span></p>
         </motion.div>
         <motion.div variants={itemVariants} className="glass-card p-6 rounded-2xl border border-white/5 shadow-lg relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-right from-accent to-transparent opacity-50" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-transparent opacity-50" />
           <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">Avg Commercial</p>
           <p className="text-3xl font-bold text-accent"><CountUp end={stats.avgCom} decimals={1} /> <span className="text-base text-slate-500 font-normal">kWh</span></p>
         </motion.div>
         <motion.div variants={itemVariants} className="glass-card p-6 rounded-2xl border border-white/5 shadow-lg relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-right from-danger to-transparent opacity-50" />
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-danger to-transparent opacity-50" />
           <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mb-2">High Users</p>
           <p className="text-3xl font-bold text-danger"><CountUp end={stats.highCount} /> <span className="text-base text-slate-500 font-normal">Zones</span></p>
         </motion.div>
