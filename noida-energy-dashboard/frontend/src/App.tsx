@@ -5,6 +5,7 @@ import Insights from './pages/Insights';
 import ModelComparison from './pages/ModelComparison';
 import Prediction from './pages/Prediction';
 import { CursorFX } from './components/CursorFX';
+import { CommandPalette } from './components/CommandPalette';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         overflow: 'hidden'
       }}>
         <CursorFX />
+        <CommandPalette />
         <Sidebar />
         <main style={{ flex: 1, overflow: 'auto', position: 'relative' }}>
           <Routes>

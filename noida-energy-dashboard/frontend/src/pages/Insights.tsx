@@ -1,8 +1,11 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, ResponsiveContainer, Cell, PieChart, Pie, Legend, LineChart, Line } from 'recharts';
 import { useMapData } from '../hooks/useMapData';
 import { Header } from '../components/Header';
 import { motion } from 'framer-motion';
+import { jsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
+import { FileDown } from 'lucide-react';
 
 const CountUp = ({ end, duration = 1000, decimals = 0 }: any) => {
   const [count, setCount] = useState(0);
@@ -37,6 +40,32 @@ const itemVariants = {
 
 export default function Insights() {
   const { data, loading } = useMapData();
+  const reportRef = useRef<HTMLDivElement>(null);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const exportReport = async () => {
+    if (!reportRef.current) return;
+    setIsExporting(true);
+    try {
+      const canvas = await html2canvas(reportRef.current, {
+        backgroundColor: '#0a0a0f',
+        scale: 2,
+        logging: false,
+        useCORS: true
+      });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`Noida_Energy_Executive_Report_${new Date().toLocaleDateString()}.pdf`);
+    } catch (err) {
+      console.error('Export failed', err);
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   const stats = useMemo(() => {
     if (!data?.features) return { totalKwh: 0, avgRes: 0, avgCom: 0, highCount: 0, chart1: [], chart2: [], chart3: [], totalRecords: 0 };
@@ -105,8 +134,17 @@ export default function Insights() {
 
   return (
     <div className="flex-1 bg-[#0a0a0f] overflow-auto flex flex-col">
-      <Header title="Energy Insights" showFilterBtn={false} />
-      <div className="flex-1 p-6 md:p-10 overflow-y-auto">
+      <div className="sticky top-0 z-20 glass border-b border-white/10 px-8 py-2 flex justify-between items-center">
+        <Header title="Energy Insights" showFilterBtn={false} />
+        <button 
+          onClick={exportReport}
+          disabled={isExporting}
+          className="flex items-center gap-2 px-6 py-2.5 bg-accent hover:brightness-110 disabled:opacity-50 text-white rounded-xl text-sm font-bold shadow-lg transition-all"
+        >
+          {isExporting ? 'Generating...' : <><FileDown size={18} /> Export Executive Report</>}
+        </button>
+      </div>
+      <div ref={reportRef} className="flex-1 p-6 md:p-10 overflow-y-auto">
         <motion.div variants={containerVariants} initial="hidden" animate="show" className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
         <motion.div variants={itemVariants} className="glass-card p-6 rounded-2xl border border-white/5 shadow-lg relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-accent to-transparent opacity-50" />

@@ -7,6 +7,8 @@ import { Header } from '../components/Header';
 import { useMapData } from '../hooks/useMapData';
 import throttle from 'lodash/throttle';
 import { AnimatePresence } from 'framer-motion';
+import { FloatingHUD } from '../components/FloatingHUD';
+import { MapControls } from '../components/MapControls';
 
 export default function MapView() {
   const { data, loading } = useMapData();
@@ -14,6 +16,11 @@ export default function MapView() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [filters, setFilters] = useState({ category: 'all', level: 'all' });
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  
+  // New States for Advanced Features
+  const [viewMode, setViewMode] = useState<'consumption' | 'solar'>('consumption');
+  const [time, setTime] = useState(12);
+  const [scenario, setScenario] = useState<'baseline' | 'ev_impact'>('baseline');
 
   const filteredData = useMemo(() => {
     if (!data || !data.features) return null;
@@ -65,6 +72,9 @@ export default function MapView() {
         selectedId={selectedId}
         onHover={handleHover}
         onClick={handleClick}
+        viewMode={viewMode}
+        time={time}
+        scenario={scenario}
       />
 
       {/* Header overlaid top-left */}
@@ -106,6 +116,16 @@ export default function MapView() {
 
       {/* Detail panel slides in from right */}
       <DetailPanel feature={selectedFeature} onClose={() => setSelectedId(null)} />
+
+      {/* Map Controls overlaid bottom-center */}
+      <MapControls 
+        viewMode={viewMode} setViewMode={setViewMode}
+        time={time} setTime={setTime}
+        scenario={scenario} setScenario={setScenario}
+      />
+
+      {/* Floating HUD overlaid bottom-left */}
+      <FloatingHUD data={filteredData?.features || []} />
     </div>
   );
 }

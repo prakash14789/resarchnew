@@ -6,7 +6,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 
 const FREE_DARK_STYLE = 'https://tiles.openfreemap.org/styles/dark';
 
-const getColor = (kwh: number, min: number, max: number) => {
+const getConsumptionColor = (kwh: number, min: number, max: number) => {
   const t = Math.max(0, Math.min(1, (kwh - min) / (max - min)));
   if (t < 0.5) {
     const f = t * 2;
@@ -16,7 +16,19 @@ const getColor = (kwh: number, min: number, max: number) => {
   return [Math.round(234+5*f), Math.round(179-111*f), Math.round(8+60*f), 220];
 };
 
-export function DeckMap({ data, onHover, onClick }: any) {
+const getSolarColor = (potential: number) => {
+  // Potential is typically 0 to 1 score
+  const f = Math.max(0, Math.min(1, potential));
+  // Yellow [253, 224, 71] to Orange [234, 88, 12]
+  return [
+    Math.round(253 - 19 * f),
+    Math.round(224 - 136 * f),
+    Math.round(71 - 59 * f),
+    240
+  ];
+};
+
+export function DeckMap({ data, onHover, onClick, viewMode, time, scenario }: any) {
   const container = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -35,44 +47,83 @@ export function DeckMap({ data, onHover, onClick }: any) {
     map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
     map.on('load', () => {
-      // deck.gl overlay
       const overlay = new MapboxOverlay({
         interleaved: false,
-        layers: buildLayers(data, onHover, onClick),
+        layers: buildLayers(data, onHover, onClick, viewMode, time, scenario),
       });
       map.addControl(overlay as any);
 
-      // Store overlay ref for updates
       if (container.current) {
         (container.current as any)._overlay = overlay;
       }
     });
 
     (container.current as any)._map = map;
-
     return () => map.remove();
   }, []);
 
   useEffect(() => {
     const overlay = (container.current as any)?._overlay;
-    if (overlay) overlay.setProps({ layers: buildLayers(data, onHover, onClick) });
-  }, [data, onHover, onClick]);
+    if (overlay) {
+      overlay.setProps({ 
+        layers: buildLayers(data, onHover, onClick, viewMode, time, scenario) 
+      });
+    }
+  }, [data, onHover, onClick, viewMode, time, scenario]);
 
-  return <div ref={container} style={{ width: '100%', height: '100%' }} />;
+  return <div ref={container} style={{ width: '100%', height: '100%' }} id="map-container" />;
 }
 
-function buildLayers(data: any[], onHover: any, onClick: any) {
+function buildLayers(data: any[], onHover: any, onClick: any, viewMode: string, time: number, scenario: string) {
   if (!data?.length) return [];
-  const vals = data.map(d => d.properties?.predicted_kwh ?? 0);
+
+  // Logic for dynamic values based on time and scenario
+  const processedData = data.map(d => {
+    const base = d.properties.predicted_kwh ?? 400;
+    const cat = d.properties.category;
+    
+    let multiplier = 1.0;
+    // Commercial peaks 9am-6pm
+    if (cat === 'commercial') {
+      if (time >= 9 && time <= 18) multiplier = 1.2 + Math.random() * 0.3;
+      else multiplier = 0.4 + Math.random() * 0.2;
+    } 
+    // Residential peaks 6pm-11pm
+    else {
+      if (time >= 18 && time <= 23) multiplier = 1.3 + Math.random() * 0.4;
+      else if (time >= 0 && time <= 5) multiplier = 0.5 + Math.random() * 0.2;
+      else multiplier = 0.8 + Math.random() * 0.2;
+
+      // EV Scenario adds load at night
+      if (scenario === 'ev_impact' && time >= 22 || time <= 4) {
+        multiplier += 0.5;
+      }
+    }
+
+    const currentKwh = base * multiplier;
+    // Solar potential is static area-based
+    const solarScore = (d.properties.id.charCodeAt(0) % 10) / 10;
+    const solarKwh = (d.properties.area || 1500) * 0.15 * 4.5 * solarScore;
+
+    return {
+      ...d,
+      currentKwh,
+      solarKwh,
+      solarScore
+    };
+  });
+
+  const vals = processedData.map(d => viewMode === 'solar' ? d.solarKwh : d.currentKwh);
   const min = Math.min(...vals), max = Math.max(...vals);
+
   return [
     new ColumnLayer({
       id: 'cols',
-      data,
+      data: processedData,
       getPosition: (d: any) => d.geometry.coordinates,
-      getElevation: (d: any) => (d.properties.predicted_kwh ?? 0) * 1.2,
+      getElevation: (d: any) => viewMode === 'solar' ? d.solarKwh * 0.8 : d.currentKwh * 1.2,
       radius: 80,
-      getFillColor: (d: any) => getColor(d.properties.predicted_kwh ?? 0, min, max),
+      getFillColor: (d: any) => viewMode === 'solar' ? getSolarColor(d.solarScore) : getConsumptionColor(d.currentKwh, min, max),
       pickable: true,
       autoHighlight: true,
       highlightColor: [255,255,255,70],
@@ -82,10 +133,10 @@ function buildLayers(data: any[], onHover: any, onClick: any) {
     }),
     new ScatterplotLayer({
       id: 'dots',
-      data,
+      data: processedData,
       getPosition: (d: any) => d.geometry.coordinates,
       getRadius: 40,
-      getFillColor: (d: any) => getColor(d.properties.predicted_kwh ?? 0, min, max),
+      getFillColor: (d: any) => viewMode === 'solar' ? getSolarColor(d.solarScore) : getConsumptionColor(d.currentKwh, min, max),
       opacity: 0.4,
     }),
   ];
